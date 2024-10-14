@@ -1,7 +1,6 @@
 from flask import render_template, url_for, flash, redirect, request, Blueprint
-from flask_login import LoginManager, login_user, logout_user, login_required, current_user
+from flask_login import login_user, logout_user, login_required, current_user
 from werkzeug.utils import secure_filename
-import os
 from app import db
 from app.forms import RegistrationForm, LoginForm, RecipeForm
 from app.models import User, Recipe
@@ -20,7 +19,7 @@ def register():
     form = RegistrationForm()
     if form.validate_on_submit():
         user = User(username=form.username.data, email=form.email.data)
-        user.set_password(form.password.data)
+        user.set_password(form.password.data)  # Hash password using werkzeug
         
         # Handle profile image upload
         if form.profile_image.data:
@@ -40,7 +39,7 @@ def login():
     form = LoginForm()
     if form.validate_on_submit():
         user = User.query.filter_by(email=form.email.data).first()
-        if user and user.check_password(form.password.data):
+        if user and user.check_password(form.password.data):  # Check password using werkzeug
             login_user(user)
             flash('You have been logged in!', 'success')
             return redirect(url_for('main.home'))  # Redirect to home or profile page
@@ -82,8 +81,3 @@ def logout():
     logout_user()
     flash('You have been logged out!', 'success')
     return redirect(url_for('main.home'))
-
-# Register the blueprint in the create_app function of __init__.py
-# Make sure to include this line in your __init__.py
-# from app.routes import main
-# app.register_blueprint(main)

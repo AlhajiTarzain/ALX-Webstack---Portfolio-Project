@@ -1,26 +1,28 @@
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
-from werkzeug.security import generate_password_hash, check_password_hash
+from werkzeug.security import generate_password_hash, check_password_hash  # Import Flask's password hashing
 
 db = SQLAlchemy()
 
 class User(db.Model):
-    id = db.Column(db.Integer,primary_key=True)
-    username = db.Column(db.string(15),Unique = True,nullable=False)
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(15), unique=True, nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
-    password = db.Column(db.String(60), nullable=False)
+    password_hash = db.Column(db.String(128), nullable=False)  # Store hashed password
     profile_image = db.Column(db.String(120), default='default_profile.jpg')
     recipes = db.relationship('Recipe', backref='author', lazy=True)
 
     def __repr__(self):
-        return f"User('{self.username}','{self.email}')"
-    
-    def set_password(self, password):
-        self.password = generate_password_hash(password)
+        return f"User('{self.username}', '{self.email}')"
 
+    # Use werkzeug to hash the password
+    def set_password(self, password):
+        self.password_hash = generate_password_hash(password)
+
+    # Use werkzeug to check if the provided password matches the stored hash
     def check_password(self, password):
-        return check_password_hash(self.password, password)
-    
+        return check_password_hash(self.password_hash, password)
+
 class Recipe(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(100), nullable=False)
@@ -33,4 +35,4 @@ class Recipe(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
 
     def __repr__(self):
-        return f"Recipe('{self.title}', '{self.date_posted}',{self.category})"
+        return f"Recipe('{self.title}', '{self.date_posted}', '{self.category}')"
