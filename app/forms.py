@@ -8,7 +8,7 @@ class RegistrationForm(FlaskForm):
     email = StringField('Email', validators=[DataRequired(), Email()])
     password = PasswordField('Password', validators=[DataRequired(), Length(min=6, max=20)])  # Added password length validation
     confirm_password = PasswordField('Confirm Password', validators=[DataRequired(), EqualTo('password')])
-    profile_image = FileField('Profile Image', validators=[FileAllowed(['jpg', 'png'], 'Images only!')])  # Validate image file type
+    profile_image = FileField('Profile Image', validators=[FileAllowed(['jpg', 'png','jpeg'], 'Images only!')])  # Validate image file type
     submit = SubmitField('Sign Up')
 
 class LoginForm(FlaskForm):
@@ -30,5 +30,5 @@ class RecipeForm(FlaskForm):
                              validators=[DataRequired()])
     origin = StringField('Country of Origin')
     ingredients = TextAreaField('Ingredients', validators=[DataRequired()])
-    image = FileField('Recipe Image', validators=[FileAllowed(['jpg', 'png'], 'Pictures Images only!')])  # Validate image file type
+    image = FileField('Recipe Image', validators=[FileAllowed(['jpg', 'png','jpeg'], 'Pictures Images only!')])  # Validate image file type
     submit = SubmitField('Submit Recipe')

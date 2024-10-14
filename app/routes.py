@@ -1,4 +1,4 @@
-from flask import render_template, url_for, flash, redirect, request, Blueprint
+from flask import render_template, url_for, flash, redirect, request, Blueprint,jsonify
 from flask_login import login_user, logout_user, login_required, current_user
 from werkzeug.utils import secure_filename
 from app import db
@@ -9,29 +9,36 @@ from app.models import User, Recipe
 main = Blueprint('main', __name__)
 
 # Home route (optional)
-@main.route('/')
+@main.route('/home')
 def home():
-    return render_template('home.html', title='Home')
+    return jsonify({"message": "this is home"})
 
 # Registration route
 @main.route('/register', methods=['GET', 'POST'])
 def register():
-    form = RegistrationForm()
-    if form.validate_on_submit():
-        user = User(username=form.username.data, email=form.email.data)
-        user.set_password(form.password.data)  # Hash password using werkzeug
+    if request.method == 'POST':
+        form = RegistrationForm(request.form)  # Pass request.form to the form
         
-        # Handle profile image upload
-        if form.profile_image.data:
-            filename = secure_filename(form.profile_image.data.filename)
-            form.profile_image.data.save(os.path.join('static/profile_images', filename))
-            user.profile_image = filename
+        if form.validate():
+            user = User(username=form.username.data, email=form.email.data)
+            user.set_password(form.password.data)  # Hash password using werkzeug
+            
+            # Handle profile image upload
+            if form.profile_image.data:
+                filename = secure_filename(form.profile_image.data.filename)
+                form.profile_image.data.save(os.path.join('static/images', filename))
+                user.profile_image = filename
+            
+            db.session.add(user)
+            db.session.commit()
+            
+            return jsonify({"message": "Your account has been created! You can now log in."}), 201
         
-        db.session.add(user)
-        db.session.commit()
-        flash('Your account has been created! You can now log in.', 'success')
-        return redirect(url_for('main.login'))
-    return render_template('register.html', title='Register', form=form)
+        # Return specific validation errors
+        return jsonify({"errors": form.errors}), 400
+    
+    return jsonify({"message": "Please submit the registration form."}), 200
+
 
 # Login route
 @main.route('/login', methods=['GET', 'POST'])
@@ -65,7 +72,7 @@ def submit_recipe():
         # Handle recipe image upload
         if form.image.data:
             filename = secure_filename(form.image.data.filename)
-            form.image.data.save(os.path.join('static/recipe_images', filename))
+            form.image.data.save(os.path.join('static/images', filename))
             recipe.image = filename
         
         db.session.add(recipe)
@@ -81,3 +88,7 @@ def logout():
     logout_user()
     flash('You have been logged out!', 'success')
     return redirect(url_for('main.home'))
+
+@main.route('/test', methods=['GET'])
+def test_route():
+    return jsonify({"message": "Hello, this is a test!"})
