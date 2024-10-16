@@ -90,6 +90,19 @@ def submit_recipe():
         return jsonify({"error_msg":"validation error","error":form.errors})
     return render_template('submit_recipe.html', title='Submit Recipe', form=form)
 
+@main.route('/recipe/update/<int:recipe_id>', methods=['GET', 'POST'])
+@login_required
+def update_recipe(recipe_id):
+    recipe = Recipe.query.get_or_404(recipe_id)  # Fetch the recipe or return a 404 error
+    form = RecipeForm(obj=recipe)  # Prepopulate the form with existing recipe data
+
+    if form.validate_on_submit():  # Check if the form is submitted and valid
+        form.populate_obj(recipe)  # Populate the recipe object with form data
+        db.session.commit()  # Commit the changes to the database
+        flash('Recipe updated successfully!', 'success')
+        return jsonify({"message": "Recipe updated successfully!"}), 200  # Return a JSON response if needed
+    return jsonify({"error": "Failed to update recipe"}), 400  # Handle error in updating
+
 # Delete recipe route
 @main.route('/recipes/<int:id>/delete', methods=['DELETE'])
 @login_required
