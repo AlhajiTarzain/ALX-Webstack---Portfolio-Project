@@ -90,6 +90,23 @@ def submit_recipe():
         return jsonify({"error_msg":"validation error","error":form.errors})
     return render_template('submit_recipe.html', title='Submit Recipe', form=form)
 
+# Delete recipe route
+@main.route('/recipes/<int:id>/delete', methods=['DELETE'])
+@login_required
+def delete_recipe(id):
+    # Fetch the recipe by ID
+    recipe = Recipe.query.get_or_404(id)
+    
+    # Check if the current user is the author of the recipe
+    if recipe.author != current_user:
+        return jsonify({"error": "You are not authorized to delete this recipe"}), 403
+    
+    # Delete the recipe
+    db.session.delete(recipe)
+    db.session.commit()
+    
+    return jsonify({"message": f"Recipe '{recipe.title}' has been deleted."}), 200
+
 # Logout route
 @main.route('/logout')
 @login_required
