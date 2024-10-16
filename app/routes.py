@@ -4,6 +4,7 @@ from werkzeug.utils import secure_filename
 from app import db
 from app.forms import RegistrationForm, LoginForm, RecipeForm
 from app.models import User, Recipe
+import os
 
 # Create a blueprint
 main = Blueprint('main', __name__)
@@ -71,14 +72,22 @@ def submit_recipe():
         
         # Handle recipe image upload
         if form.image.data:
+            # Ensure 'static/images' directory exists
+            image_dir = os.path.join('static', 'images')
+            if not os.path.exists(image_dir):
+                os.makedirs(image_dir)
+
+            # Save the uploaded image
             filename = secure_filename(form.image.data.filename)
-            form.image.data.save(os.path.join('static/images', filename))
+            form.image.data.save(os.path.join(image_dir, filename))
             recipe.image = filename
         
         db.session.add(recipe)
         db.session.commit()
         flash('Your recipe has been submitted!', 'success')
         return redirect(url_for('main.home'))
+    else:
+        return jsonify({"error_msg":"validation error","error":form.errors})
     return render_template('submit_recipe.html', title='Submit Recipe', form=form)
 
 # Logout route
