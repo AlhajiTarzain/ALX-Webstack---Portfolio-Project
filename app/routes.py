@@ -107,6 +107,28 @@ def delete_recipe(id):
     
     return jsonify({"message": f"Recipe '{recipe.title}' has been deleted."}), 200
 
+# View all recipes route
+@main.route('/recipes', methods=['GET'])
+def get_recipes():
+    recipes = Recipe.query.all()  # Fetch all recipes from the database
+    recipes_data = []
+
+    # Loop through recipes and serialize them into a list of dictionaries
+    for recipe in recipes:
+        recipes_data.append({
+            'title': recipe.title,
+            'category': recipe.category,
+            'difficulty': recipe.difficulty,
+            'origin': recipe.origin,
+            'ingredients': recipe.ingredients,
+            'image': recipe.image,
+            'date_posted': recipe.date_posted.strftime("%Y-%m-%d %H:%M:%S"),
+            'author': recipe.author.username
+        })
+
+    # Return the serialized recipes as a JSON response
+    return jsonify({'recipes': recipes_data}), 200
+
 # Logout route
 @main.route('/logout')
 @login_required
