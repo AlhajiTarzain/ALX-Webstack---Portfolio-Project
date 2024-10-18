@@ -4,7 +4,7 @@
 Flavor Folio is a recipe-sharing platform built using Flask, designed for users to share their favorite recipes with others. Users can sign up, log in, and upload their recipes, including categories, difficulty levels, ingredients, and images. It provides functionalities for user registration, login, creating recipes, viewing all recipes, updating, and deleting them.
 
 ## Key Features
-User Registration: Users can register, providing their username, email, password, and an optional profile image.
+User Registration: Users can register, providing their username, email, password, and an optional profile image.yes.
 Login: Registered users can log in with their credentials.
 Recipe Submission: Users can submit recipes with details such as title, category, difficulty level, ingredients, and a recipe image.
 View Recipes: Anyone can view a list of recipes shared by all users.
@@ -14,13 +14,21 @@ Logout: Users can log out of the platform.
 
 ## Installation and Setup
 Prerequisites
+
 Python 3.x
+
 Flask
+
 Flask-WTF
+
 Flask-Login
+
 Flask-Migrate
+
 Flask-SQLAlchemy
+
 SQLite
+
 ### Installation
 Clone the repository:
 
@@ -62,29 +70,42 @@ flavorfolio/
 ├── foodfolio.db           # SQLite database (auto-generated)
 └── README.md              # Project documentation (this file)
 
-Configuration
+### Configuration
 Configurations for the app are set in __init__.py. Some of the key configurations include:
 
 SECRET_KEY: A secret key used for securing sessions.
 SQLALCHEMY_DATABASE_URI: The URI for the SQLite database.
 UPLOAD_FOLDER: Folder where images are uploaded.
-Forms
+
+### Forms
+
 RegistrationForm: Handles user registration (username, email, password, profile image).
+
 LoginForm: Handles user login (email and password).
+
 RecipeForm: Allows users to submit new recipes (title, category, difficulty, ingredients, and image).
+
 Models
+
 User: Stores user data including username, email, hashed password, and profile image.
 Recipe: Stores recipe data including title, category, difficulty level, ingredients, and image.
 
 ### Routes
 /register: User registration route.
+
 /login: User login route.
+
 /submit_recipe: Recipe submission route (protected).
+
 /recipes: View all recipes.
+
 /recipe/update/<int:recipe_id>: Update an existing recipe.
+
 /recipes/<int:id>/delete: Delete a recipe (protected).
+
 /logout: Logout route.
-Database
+
+### Database
 The platform uses SQLite as its database engine. Flask-Migrate is used for managing migrations.
 
 ### Running Tests
