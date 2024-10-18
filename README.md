@@ -39,19 +39,16 @@ FlavorFolio is a backend-powered platform where users can share, view, and manag
 ### Steps
 
 1. Clone the repository:
-   ```bash
+  
    git clone https://github.com/your-username/flavorfolio.git
    cd flavorfolio
 Create and activate a virtual environment:
 
-bash
-Copy code
+
 python3 -m venv venv
 source venv/bin/activate  # On Windows use: venv\Scripts\activate
 Install dependencies:
 
-bash
-Copy code
 pip install -r requirements.txt
 Set up the environment variables:
 
@@ -64,15 +61,12 @@ SECRET_KEY=your_secret_key
 SQLALCHEMY_DATABASE_URI=sqlite:///recipes.db
 Initialize the database:
 
-bash
-Copy code
+
 flask db init
 flask db migrate -m "Initial migration."
 flask db upgrade
 Run the Flask application:
 
-bash
-Copy code
 flask run
 Visit the app in your browser at http://127.0.0.1:5000/.
 
