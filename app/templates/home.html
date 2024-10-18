@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1>Recipes</h1>
+    <div id="recipes-container">
+        <!-- Recipes will be loaded here dynamically -->
+    </div>
+
+    <script>
+        // Function to fetch and display recipes
+        async function fetchRecipes() {
+            try {
+                const response = await fetch('/recipes');  // Fetch recipes from the API
+                const data = await response.json();  // Parse the JSON response
+                
+                const recipesContainer = document.getElementById('recipes-container');
+                
+                if (data.recipes && data.recipes.length > 0) {
+                    // Loop through the recipes and render them
+                    data.recipes.forEach(recipe => {
+                        const recipeElement = document.createElement('div');
+                        recipeElement.classList.add('recipe');
+                        recipeElement.innerHTML = `
+                            <h2>${recipe.title}</h2>
+                            <img src="${recipe.image}" alt="${recipe.title}" style="max-width: 200px;">
+                            <p><strong>Category:</strong> ${recipe.category}</p>
+                            <p><strong>Difficulty:</strong> ${recipe.difficulty}</p>
+                            <p><strong>Origin:</strong> ${recipe.origin}</p>
+                            <p><strong>Ingredients:</strong> ${recipe.ingredients}</p>
+                            <p><strong>Author:</strong> ${recipe.author}</p>
+                            <p><strong>Date Posted:</strong> ${recipe.date_posted}</p>
+                        `;
+                        recipesContainer.appendChild(recipeElement);
+                    });
+                } else {
+                    recipesContainer.innerHTML = '<p>No recipes found.</p>';
+                }
+            } catch (error) {
+                console.error('Error fetching recipes:', error);
+            }
+        }
+
+        // Call the function when the page loads
+        document.addEventListener('DOMContentLoaded', fetchRecipes);
+    </script>
+{% endblock %}

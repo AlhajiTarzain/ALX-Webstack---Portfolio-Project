@@ -10,9 +10,15 @@ import os
 main = Blueprint('main', __name__)
 
 # Home route (optional)
+#@main.route('/home')
+#def home():
+#    return jsonify({"message": "this is home"})
+
 @main.route('/home')
+#@login_required
 def home():
-    return jsonify({"message": "this is home"})
+    recipes = Recipe.query.all()  # Fetch all recipes from the database
+    return render_template('home.html', recipes=recipes)
 
 # Registration route
 @main.route('/register', methods=['GET', 'POST'])
