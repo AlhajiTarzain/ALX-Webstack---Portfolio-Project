@@ -148,6 +148,20 @@ def get_recipes():
     # Return the serialized recipes as a JSON response
     return jsonify({'recipes': recipes_data}), 200
 
+
+@app.route('/search', methods=['GET'])
+def search():
+    query = request.args.get('q')
+    if query:
+        # Search for recipes with titles or ingredients that match the query
+        search_results = Recipe.query.filter(
+            (Recipe.title.ilike(f'%{query}%')) | 
+            (Recipe.ingredients.ilike(f'%{query}%'))
+        ).all()
+    else:
+        search_results = []
+    return render_template('search_results.html', query=query, recipes=search_results)
+    
 # Logout route
 @main.route('/logout')
 @login_required
