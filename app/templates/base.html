@@ -15,7 +15,7 @@
             <li><a href="{{ url_for('main.logout') }}">Logout</a></li>
         </ul>
         <!-- Search form -->
-        <form action="{{ url_for('search') }}" method="GET" class="search-form">
+        <form action="{{ url_for('main.search') }}" method="GET" class="search-form">
             <input type="text" name="q" placeholder="Search recipes..." required>
             <button type="submit">Search</button>
         </form>

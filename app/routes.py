@@ -149,19 +149,8 @@ def get_recipes():
     return jsonify({'recipes': recipes_data}), 200
 
 
-@app.route('/search', methods=['GET'])
-def search():
-    query = request.args.get('q')
-    if query:
-        # Search for recipes with titles or ingredients that match the query
-        search_results = Recipe.query.filter(
-            (Recipe.title.ilike(f'%{query}%')) | 
-            (Recipe.ingredients.ilike(f'%{query}%'))
-        ).all()
-    else:
-        search_results = []
-    return render_template('search_results.html', query=query, recipes=search_results)
-    
+
+
 # Logout route
 @main.route('/logout')
 @login_required
@@ -169,6 +158,40 @@ def logout():
     logout_user()
     flash('You have been logged out!', 'success')
     return redirect(url_for('main.home'))
+
+
+@main.route('/search', methods=['GET'])
+def search():
+    query = request.args.get('q', '')  #url parameter separation
+
+    # Use SQLAlchemy to search for recipes by title or username or origin
+    results = Recipe.query.join(User).filter(
+        (Recipe.title.ilike(f'%{query}%')) | 
+        (User.username.ilike(f'%{query}%')) |
+        (Recipe.origin.ilike(f'%{query}%'))
+
+    ).all()
+
+    # show results as imolemented in models
+    recipes_data = []
+    for recipe in results:
+        recipes_data.append({
+            'id': recipe.id,
+            'title': recipe.title,
+            'category': recipe.category,
+            'difficulty': recipe.difficulty,
+            'origin': recipe.origin,
+            'ingredients': recipe.ingredients,
+            'image': recipe.image,
+            'date_posted': recipe.date_posted.strftime("%Y-%m-%d %H:%M:%S"),
+            'author': recipe.author.username  # Access the username through the relationship
+        })
+
+    # Return the serialized results as a JSON response
+    return jsonify({'results': recipes_data}), 200
+
+
+
 
 @main.route('/test', methods=['GET'])
 def test_route():
