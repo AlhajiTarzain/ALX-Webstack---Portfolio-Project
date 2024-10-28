@@ -120,5 +120,5 @@ by registering, logging in, and performing operations like submitting, updating,
 
 ## AUTHORS
 * ALIY ZAINUL ABIDEEN TAHIRU
-*LinkedIn - Aliy Zainul Abideen Tahiru
-*Email- Dredeen21@gmail.com
+* LinkedIn - Aliy Zainul Abideen Tahiru
+* Email- Dredeen21@gmail.com
