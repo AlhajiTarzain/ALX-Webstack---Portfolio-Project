@@ -53,7 +53,7 @@ python run.py
 Access the application at http://127.0.0.1:5000/.
 
 ### Project Structure
-\\\
+```
 flavorfolio/
 ├── app/
 │   ├── __init__.py        # Application setup and configuration
@@ -69,7 +69,7 @@ flavorfolio/
 ├── run.py                 # Entry point for running the application
 ├── foodfolio.db           # SQLite database (auto-generated)
 └── README.md              # Project documentation (this file)
-\\\
+```
 ### Configuration
 Configurations for the app are set in __init__.py. Some of the key configurations include:
 
